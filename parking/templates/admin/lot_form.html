@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>{{ action }} Parking Lot</h2>
+<form method="POST" novalidate>
+  {{ form.hidden_tag() }}
+  <div class="mb-3">
+    {{ form.prime_location_name.label(class="form-label") }}
+    {{ form.prime_location_name(class="form-control") }}
+    {% for error in form.prime_location_name.errors %}
+      <div class="text-danger small">{{ error }}</div>
+    {% endfor %}
+  </div>
+
+  <div class="mb-3">
+    {{ form.price_per_hour.label(class="form-label") }}
+    {{ form.price_per_hour(class="form-control") }}
+    {% for error in form.price_per_hour.errors %}
+      <div class="text-danger small">{{ error }}</div>
+    {% endfor %}
+  </div>
+
+  <div class="mb-3">
+    {{ form.address.label(class="form-label") }}
+    {{ form.address(class="form-control") }}
+    {% for error in form.address.errors %}
+      <div class="text-danger small">{{ error }}</div>
+    {% endfor %}
+  </div>
+
+  <div class="mb-3">
+    {{ form.pincode.label(class="form-label") }}
+    {{ form.pincode(class="form-control") }}
+    {% for error in form.pincode.errors %}
+      <div class="text-danger small">{{ error }}</div>
+    {% endfor %}
+  </div>
+
+  <div class="mb-3">
+    {{ form.max_spots.label(class="form-label") }}
+    {{ form.max_spots(class="form-control") }}
+    {% for error in form.max_spots.errors %}
+      <div class="text-danger small">{{ error }}</div>
+    {% endfor %}
+  </div>
+
+  {{ form.submit(class="btn btn-success") }}
+  <a href="{{ url_for('admin.dashboard') }}" class="btn btn-secondary">Cancel</a>
+</form>
+{% endblock %}

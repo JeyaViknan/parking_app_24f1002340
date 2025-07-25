@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>User Dashboard</h2>
+
+{% if active_res %}
+<div class="card mb-4">
+  <div class="card-header">Active Reservation</div>
+  <div class="card-body">
+    <p>
+      Lot: {{ active_res.spot.lot.prime_location_name }}<br>
+      Spot: #{{ active_res.spot.spot_number }} (ID: {{ active_res.spot.id }})<br>
+      Parked At: {{ active_res.parked_at }}
+    </p>
+    <form method="POST" action="{{ url_for('user.release', reservation_id=active_res.id) }}"
+          onsubmit="return confirm('Release your spot?');">
+      <button type="submit" class="btn btn-danger">Release</button>
+    </form>
+  </div>
+</div>
+{% else %}
+<div class="card mb-4">
+  <div class="card-header">Book a Spot</div>
+  <div class="card-body">
+    <form method="POST" action="{{ url_for('user.book') }}">
+      <div class="mb-3">
+        <label for="lot" class="form-label">Choose a lot</label>
+        <select name="lot_id" id="lot" class="form-select" required>
+          <option value="">-- Select --</option>
+          {% for lot in lots %}
+            {% set total = lot.spots|length %}
+            {% set occupied = lot.spots|selectattr('status','equalto','O')|list|length %}
+            {% set available = total - occupied %}
+            <option value="{{ lot.id }}">
+              {{ lot.prime_location_name }} - {{ available }} available / {{ total }} spots @ ₹{{ "%.2f"|format(lot.price_per_hour) }}/hr
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+      <button type="submit" class="btn btn-primary">Book First Available Spot</button>
+    </form>
+  </div>
+</div>
+{% endif %}
+
+<h3>History</h3>
+{% if history %}
+<div class="table-responsive mb-4">
+  <table class="table table-striped">
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th>Lot</th>
+      <th>Spot#</th>
+      <th>Parked At</th>
+      <th>Released At</th>
+      <th>Total Cost</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for r in history %}
+      <tr>
+        <td>{{ r.id }}</td>
+        <td>{{ r.spot.lot.prime_location_name }}</td>
+        <td>{{ r.spot.spot_number }}</td>
+        <td>{{ r.parked_at }}</td>
+        <td>{{ r.released_at }}</td>
+        <td>
+          {% if r.total_cost is not none %}
+            ₹{{ "%.2f"|format(r.total_cost) }}
+          {% else %}
+            -
+          {% endif %}
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<div class="card mb-4">
+  <div class="card-header">Your Usage History (Total Spend per Lot)</div>
+  <div class="card-body">
+    <canvas id="userHistoryChart"></canvas>
+  </div>
+</div>
+
+<script>
+  const userHistoryLabels = {{ chart_labels|tojson }};
+  const userHistoryValues = {{ chart_values|tojson }};
+  renderUserChart(userHistoryLabels, userHistoryValues);
+</script>
+
+{% else %}
+<p>No past reservations.</p>
+{% endif %}
+
+{% endblock %}
