@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, redirect, url_for
 from parking.extensions import db, login_manager
 from parking.models import ParkingLot, ParkingSpot, Reservation, User
 from parking import create_app
@@ -6,6 +6,10 @@ from flask_login import current_user, login_required
 
 app = create_app()
 
+# -------- Default Home Route -------- #
+@app.route("/")
+def home():
+    return redirect(url_for("auth.login"))
 
 # -------- Minimal REST API endpoints -------- #
 
