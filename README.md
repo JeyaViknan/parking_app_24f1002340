@@ -38,3 +38,4 @@ source venv/bin/activate  # Windows: venv\Scripts\activate
 pip install -r requirements.txt
 python scripts/create_db.py
 flask --app app.py run
+go to : http://127.0.0.1:5000.
