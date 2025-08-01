@@ -6,12 +6,10 @@ from flask_login import current_user, login_required
 
 app = create_app()
 
-# -------- Default Home Route -------- #
 @app.route("/")
 def home():
     return redirect(url_for("auth.login"))
 
-# -------- Minimal REST API endpoints -------- #
 
 @app.route("/api/lots", methods=["GET"])
 def api_lots():

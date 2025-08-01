@@ -11,5 +11,4 @@ class Config:
     )
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     WTF_CSRF_ENABLED = True
-    # Flask-Login
-    REMEMBER_COOKIE_DURATION = 3600 * 24 * 14  # 2 weeks
+    REMEMBER_COOKIE_DURATION = 3600 * 24 * 14  

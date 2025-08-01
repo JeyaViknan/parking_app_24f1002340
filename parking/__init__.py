@@ -25,6 +25,6 @@ def create_app():
         return User.query.get(int(user_id))
 
     with app.app_context():
-        db.create_all()  # Ensure tables exist if not using create_db.py
+        db.create_all()  
 
     return app

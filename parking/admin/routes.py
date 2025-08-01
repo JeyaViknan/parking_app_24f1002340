@@ -28,7 +28,6 @@ def dashboard():
     lots = ParkingLot.query.all()
     users = User.query.all()
 
-    # Occupancy & revenue data for charts
     occupancy_labels = []
     occupied_data = []
     available_data = []
@@ -88,9 +87,8 @@ def lot_create():
             max_spots=form.max_spots.data
         )
         db.session.add(lot)
-        db.session.flush()  # get lot.id
+        db.session.flush()  
 
-        # Auto-generate spots
         for i in range(1, lot.max_spots + 1):
             spot = ParkingSpot(lot_id=lot.id, status='A', spot_number=i)
             db.session.add(spot)
@@ -118,7 +116,6 @@ def lot_edit(lot_id):
         if new_max_spots < lot.max_spots:
             flash("Reducing spots is not supported in V1.", "warning")
         else:
-            # Add additional spots if increased
             for i in range(lot.max_spots + 1, new_max_spots + 1):
                 db.session.add(ParkingSpot(lot_id=lot.id, status='A', spot_number=i))
             lot.max_spots = new_max_spots
@@ -134,7 +131,6 @@ def lot_edit(lot_id):
 @admin_required
 def lot_delete(lot_id):
     lot = ParkingLot.query.get_or_404(lot_id)
-    # Check any occupied spots
     occupied = ParkingSpot.query.filter_by(lot_id=lot.id, status='O').count()
     if occupied > 0:
         flash("Cannot delete lot with occupied spots.", "danger")
